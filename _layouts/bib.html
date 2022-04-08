@@ -50,9 +50,14 @@
                 {%- endif -%}
               {%- endfor -%}
             {%- endif -%}
+            {%- if author.last == *%}
             {%- assign author_is_equalcontrib = false -%}
             {%- if author.last == *%}
               {%- assign author_is_equalcontrib = true -%}
+            {%- endif -%}
+            
+            {%- if author.last == *%}
+              {% continue %}
             {%- endif -%}
             
             {%- if forloop.length == 1 -%}
