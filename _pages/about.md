@@ -23,8 +23,7 @@ social: true  # includes social icons at the bottom of the page
 <a href="https://yonsei.ac.kr/" target="_blank" rel="noopener">Yonsei University</a>.
 I earned my B.S. degree in <a href="https://ee.yonsei.ac.kr/" target="_blank" rel="noopener">Electrical and Electronic Engineering</a> from <a href="https://yonsei.ac.kr/" target="_blank" rel="noopener">Yonsei University</a> in 2018. I was a research intern at <a href="https://research.adobe.com/" target="_blank" rel="noopener">Adobe Research</a> (San Jose, CA) in 2021, and my mentors were <a href="https://joonyoung-cv.github.io">Joon-Young Lee</a>, <a href="https://sites.google.com/view/seoungwugoh">Seoung Wug Oh</a>, and <a href="https://www.brianpricephd.com">Brian Price</a>.</p>
 
-<p>I am broadly interested in computer vision.<br>
-Specifically, my research interests include
+<p>I am broadly interested in computer vision. Specifically, my research interests include
 <ul>
 <li>Image / Video Segmentation</li> 
 <li>Image / Video Matting</li> 
