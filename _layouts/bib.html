@@ -31,23 +31,20 @@
           {{reference}}
         {%- else %}
           <!-- Title -->
-          <div class="title">{{entry.title}}</div>
+          {%- capture entrytitle -%}<b>{{entry.title}}</b>{%- endcapture -%}
+          <div class="title">{{entrytitle}}</div>
           <!-- Author -->
           <div class="author">
           {%- for author in entry.author_array -%}
-            <!-- {%- assign author_first_clean = author.first | remove_first: "*" -%} -->
             {%- assign author_is_self = false -%}
             {%- if author.last == site.scholar.last_name%}
               {%- if site.scholar.first_name contains author.first -%}
-              <!-- {%- if site.scholar.first_name contains author_first_clean -%} -->
                 {%- assign author_is_self = true -%}
               {%- endif -%}
             {%- endif -%}
             {%- assign coauthor_url = nil -%}
             {%- if site.data.coauthors[author.first] -%}
-            <!-- {%- if site.data.coauthors[author_first_clean] -%} -->
               {%- for coauthor in site.data.coauthors[author.first] -%}
-              <!-- {%- for coauthor in site.data.coauthors[author_first_clean] -%} -->
                 {%- if coauthor.lastname contains author.last -%}
                   {%- assign coauthor_url = coauthor.url -%}
                   {%- break -%}
@@ -97,7 +94,7 @@
           {%- endif -%}
           {%- if entry.highlight %}
             <!-- {%- capture entryhighlight -%}<br><b> ({{entry.highlight}})</b> {%- endcapture -%} -->
-            {%- capture entryhighlight -%}<br><span style="color: #000000;background-color: #03f3b3;"><b>&nbsp;&nbsp;{{entry.highlight}}&nbsp;&nbsp;</b></span> {%- endcapture -%}
+            {%- capture entryhighlight -%}<br><span style="color: #000000;background-color: #00ffff;"><b>&nbsp;&nbsp;{{entry.highlight}}&nbsp;&nbsp;</b></span> {%- endcapture -%}
           {%- else -%}
             {%- capture entryhighlight -%}{%- endcapture -%}
           {%- endif %}
