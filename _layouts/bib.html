@@ -35,7 +35,7 @@
           <!-- Author -->
           <div class="author">
           {%- for author in entry.author_array -%}
-            {%- assign author_first_clean = author.first | remove_first: "*" -%}
+            <!-- {%- assign author_first_clean = author.first | remove_first: "*" -%} -->
             {%- assign author_is_self = false -%}
             {%- if author.last == site.scholar.last_name%}
               {%- if site.scholar.first_name contains author.first -%}
