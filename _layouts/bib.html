@@ -35,36 +35,29 @@
           <!-- Author -->
           <div class="author">
           {%- for author in entry.author_array -%}
+            {%- assign author_first_wo_indicater = author.first| remove_first: "*" -%}
             {%- assign author_is_self = false -%}
             {%- if author.last == site.scholar.last_name%}
-              {%- if site.scholar.first_name contains author.first -%}
+              <!-- {%- if site.scholar.first_name contains author.first -%} -->
+              {%- if site.scholar.first_name contains author_first_wo_indicater -%}
                 {%- assign author_is_self = true -%}
               {%- endif -%}
             {%- endif -%}
             {%- assign coauthor_url = nil -%}
-            {%- if site.data.coauthors[author.first] -%}
-              {%- for coauthor in site.data.coauthors[author.first] -%}
+            <!-- {%- if site.data.coauthors[author.first] -%} -->
+            {%- if site.data.coauthors[author_first_wo_indicater] -%}
+              <!-- {%- for coauthor in site.data.coauthors[author.first] -%} -->
+              {%- for coauthor in site.data.coauthors[author_first_wo_indicater] -%}
                 {%- if coauthor.lastname contains author.last -%}
                   {%- assign coauthor_url = coauthor.url -%}
                   {%- break -%}
                 {%- endif -%}
               {%- endfor -%}
             {%- endif -%}
-            {%- if author.last == *%}
-            {%- assign author_is_equalcontrib = false -%}
-            {%- if author.last == *%}
-              {%- assign author_is_equalcontrib = true -%}
-            {%- endif -%}
-            
-            {%- if author.last == *%}
-              {% continue %}
-            {%- endif -%}
             
             {%- if forloop.length == 1 -%}
               {%- if author_is_self %}
                 <em>{{author.first}} {{author.last}}</em>
-              {%- elseif author_is_equalcontrib %}
-                {{author.last}}
               {%- else -%}
                 {{author.first}} {{author.last}}
               {%- endif -%}
@@ -72,8 +65,6 @@
               {%- unless forloop.last -%}
                 {% if author_is_self %}
                   <em>{{author.first}} {{author.last}}</em>,&nbsp;
-                {%- elseif author_is_equalcontrib %}
-                  {{author.last}}&nbsp;
                 {%- else -%}
                   {% if coauthor_url -%}
                     <a href="{{coauthor_url}}">{{author.first}} {{author.last}}</a>,&nbsp;
