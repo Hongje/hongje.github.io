@@ -50,10 +50,16 @@
                 {%- endif -%}
               {%- endfor -%}
             {%- endif -%}
+            {%- assign author_is_equalcontrib = false -%}
+            {%- if author.last == *%}
+              {%- assign author_is_equalcontrib = true -%}
+            {%- endif -%}
             
             {%- if forloop.length == 1 -%}
               {%- if author_is_self %}
                 <em>{{author.first}} {{author.last}}</em>
+              {%- elseif author_is_equalcontrib %}
+                {{author.last}}
               {%- else -%}
                 {{author.first}} {{author.last}}
               {%- endif -%}
@@ -61,6 +67,8 @@
               {%- unless forloop.last -%}
                 {% if author_is_self %}
                   <em>{{author.first}} {{author.last}}</em>,&nbsp;
+                {%- elseif author_is_equalcontrib %}
+                  {{author.last}}&nbsp;
                 {%- else -%}
                   {% if coauthor_url -%}
                     <a href="{{coauthor_url}}">{{author.first}} {{author.last}}</a>,&nbsp;
