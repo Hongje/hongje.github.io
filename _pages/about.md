@@ -10,7 +10,8 @@ profile:
   address: >
     <p>📧 hjseong [at] yonsei.ac.kr</p>
     <p>📍 C607, 3rd Eng. Bldg, 50 Yonsei-ro, Seodaemun-gu, Seoul, Korea, 03722
-    <p align="center"><a href="https://drive.google.com/file/d/1_zTYfTYeUUrEp1YUK-G1YY_7ITcB6OR4/view?usp=sharing"><b>CV</b></a>
+    # <p align="center"><a href="https://drive.google.com/file/d/1_zTYfTYeUUrEp1YUK-G1YY_7ITcB6OR4/view?usp=sharing"><b>CV</b></a>
+    <p align="center"><a href="./assets/pdf/cv_hongjeseong.pdf"><b>CV</b></a>
     | <a href="https://scholar.google.com/citations?user=M25_eCsAAAAJ"><b>Google Scholar</b></a>
     | <a href="https://github.com/Hongje"><b>Github</b></a>
     </p>
