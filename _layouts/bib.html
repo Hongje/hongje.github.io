@@ -98,6 +98,7 @@
             {%- capture entryhighlight -%}<br><span style="color: #000000;background-color: #00ffff;"><b>&nbsp;&nbsp;{{entry.highlight}}&nbsp;&nbsp;</b></span> {%- endcapture -%}
           {%- else -%}
             {%- capture entryhighlight -%}{%- endcapture -%}
+          {%- endif %}
           {%- if entry.highlight2 %}
             {%- capture entryhighlight2 -%}<br><span style="color: #000000;background-color: #fff857;"><b>&nbsp;&nbsp;{{entry.highlight2}}&nbsp;&nbsp;</b></span> {%- endcapture -%}
           {%- else -%}
