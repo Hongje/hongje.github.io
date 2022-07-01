@@ -98,6 +98,10 @@
             {%- capture entryhighlight -%}<br><span style="color: #000000;background-color: #00ffff;"><b>&nbsp;&nbsp;{{entry.highlight}}&nbsp;&nbsp;</b></span> {%- endcapture -%}
           {%- else -%}
             {%- capture entryhighlight -%}{%- endcapture -%}
+          {%- if entry.highlight2 %}
+            {%- capture entryhighlight2 -%}<br><span style="color: #000000;background-color: #fff857;"><b>&nbsp;&nbsp;{{entry.highlight2}}&nbsp;&nbsp;</b></span> {%- endcapture -%}
+          {%- else -%}
+            {%- capture entryhighlight2 -%}{%- endcapture -%}
           {%- endif %}
           {%- if entry.month -%}
             {%- capture entrymonth -%}{{ ", " }}{{entry.month | capitalize}}{%- endcapture -%}
@@ -121,7 +125,7 @@
           {%- else -%}
             {%- capture entryearlyaccess -%}{%- endcapture -%}
           {%- endif -%}
-          {%- capture periodical -%}{{ entrytype }}{{ entrymonth }}{{ entryyear }}{{ entryearlyaccess }}{{ entryimpactfactor }}{{ entryhighlight }}{%- endcapture -%}
+          {%- capture periodical -%}{{ entrytype }}{{ entrymonth }}{{ entryyear }}{{ entryearlyaccess }}{{ entryimpactfactor }}{{ entryhighlight }}{{ entryhighlight2 }}{%- endcapture -%}
           <div class="periodical">
             {{ periodical | strip }}
           </div>
