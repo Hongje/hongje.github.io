@@ -93,9 +93,14 @@
           {%- else -%}
             {%- capture entrytype -%}{%- endcapture -%}
           {%- endif -%}
+          {%- if entry.oral %}
+            {%- capture entryoral -%}<br><span style="color: #000000;background-color: #00ffff;"><b>&nbsp;&nbsp;{{entry.oral}}&nbsp;&nbsp;</b></span> {%- endcapture -%}
+          {%- else -%}
+            {%- capture entryoral -%}{%- endcapture -%}
+          {%- endif %}
           {%- if entry.highlight %}
             <!-- {%- capture entryhighlight -%}<br><b> ({{entry.highlight}})</b> {%- endcapture -%} -->
-            {%- capture entryhighlight -%}<br><span style="color: #000000;background-color: #00ffff;"><b>&nbsp;&nbsp;{{entry.highlight}}&nbsp;&nbsp;</b></span> {%- endcapture -%}
+            {%- capture entryhighlight -%}<br><span style="color: #000000;background-color: #d9d9d9;"><b>&nbsp;&nbsp;{{entry.highlight}}&nbsp;&nbsp;</b></span> {%- endcapture -%}
           {%- else -%}
             {%- capture entryhighlight -%}{%- endcapture -%}
           {%- endif %}
@@ -121,7 +126,7 @@
           {%- else -%}
             {%- capture entryearlyaccess -%}{%- endcapture -%}
           {%- endif -%}
-          {%- capture periodical -%}{{ entrytype }}{{ entrymonth }}{{ entryyear }}{{ entryearlyaccess }}{{ entryimpactfactor }}{{ entryhighlight }}{%- endcapture -%}
+          {%- capture periodical -%}{{ entrytype }}{{ entrymonth }}{{ entryyear }}{{ entryearlyaccess }}{{ entryimpactfactor }}{{ entryoral }}{{ entryhighlight }}{%- endcapture -%}
           <div class="periodical">
             {{ periodical | strip }}
           </div>
