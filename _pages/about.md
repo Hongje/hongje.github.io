@@ -25,6 +25,7 @@ I was a research intern at <a href="https://research.adobe.com/" target="_blank"
 
 <p>I am broadly interested in computer vision. Specifically, my research interests include
 <ul>
+<li>Autonomous Driving</li> 
 <li>Image / Video Segmentation</li> 
 <li>Image / Video Matting</li> 
 <li>Image / Video Recognition</li>
