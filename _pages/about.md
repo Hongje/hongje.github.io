@@ -8,7 +8,7 @@ profile:
   align: right
   image: hongjeseong.jpg
   address: >
-    <p>📧 hongje.seong [at] samsung.com</p>
+    <p>📧 hjseong118 [at] gmail.com</p>
     <p>📍 130, Samsung-ro, Yeongtong-gu, Suwon-si, Gyeonggi-do, 16678, Korea
     <!-- <p align="center"><a href="https://drive.google.com/file/d/1_zTYfTYeUUrEp1YUK-G1YY_7ITcB6OR4/view?usp=sharing"><b>CV</b></a> -->
     <p align="center"><a href="./assets/pdf/cv_hongjeseong.pdf"><b>CV</b></a>
