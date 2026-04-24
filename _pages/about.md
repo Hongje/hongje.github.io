@@ -10,8 +10,7 @@ profile:
   address: >
     <p>📧 hjseong [at] uos.ac.kr</p>
     <p>📍 163 Seoulsiripdaero, Dongdaemun-gu, Seoul 02504 Korea
-    <!-- <p align="center"><a href="https://drive.google.com/file/d/1_zTYfTYeUUrEp1YUK-G1YY_7ITcB6OR4/view?usp=sharing"><b>CV</b></a> -->
-    <p align="center"><a href="./assets/pdf/cv_hongjeseong.pdf"><b>CV</b></a>
+    <p align="center"><a href="https://drive.google.com/file/d/1_zTYfTYeUUrEp1YUK-G1YY_7ITcB6OR4/view?usp=sharing"><b>CV</b></a>
     | <a href="https://scholar.google.com/citations?user=M25_eCsAAAAJ"><b>Google Scholar</b></a>
     | <a href="https://github.com/Hongje"><b>Github</b></a>
     </p>
