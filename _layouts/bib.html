@@ -42,54 +42,7 @@
           <div class="title">{{entrytitle}}</div>
           <!-- Author -->
           <div class="author">
-          {%- for author in entry.author_array -%}
-            {%- assign authorlast = author.last | remove_first: "*" -%}
-            {%- assign author_is_self = false -%}
-            {%- if authorlast == site.scholar.last_name%}
-              {%- if site.scholar.first_name contains author.first -%}
-                {%- assign author_is_self = true -%}
-              {%- endif -%}
-            {%- endif -%}
-            {%- assign coauthor_url = nil -%}
-            {%- if site.data.coauthors[author.first] -%}
-              {%- for coauthor in site.data.coauthors[author.first] -%}
-                {%- if coauthor.lastname contains authorlast -%}
-                  {%- assign coauthor_url = coauthor.url -%}
-                  {%- break -%}
-                {%- endif -%}
-              {%- endfor -%}
-            {%- endif -%}
-            
-            {%- if forloop.length == 1 -%}
-              {%- if author_is_self %}
-                <em>{{author.first}} {{author.last}}</em>
-              {%- else -%}
-                {{author.first}} {{author.last}}
-              {%- endif -%}
-            {%- else -%}
-              {%- unless forloop.last -%}
-                {% if author_is_self %}
-                  <em>{{author.first}} {{author.last}}</em>,&nbsp;
-                {%- else -%}
-                  {% if coauthor_url -%}
-                    <a href="{{coauthor_url}}">{{author.first}} {{author.last}}</a>,&nbsp;
-                  {%- else -%}
-                    {{author.first}} {{author.last}},&nbsp;
-                  {%- endif -%}
-                {%- endif -%}
-              {%- else -%}
-                {% if author_is_self -%}
-                  and <em>{{author.first}} {{author.last}}</em>
-                {% else -%}
-                  {%- if coauthor_url -%}
-                    and <a href="{{coauthor_url}}">{{author.first}} {{author.last}}</a>
-                  {% else -%}
-                    and {{author.first}} {{author.last}}
-                  {%- endif -%}
-                {%- endif -%}
-              {%- endunless -%}
-            {%- endif -%}
-          {%- endfor %}
+            {{ entry | publication_authors }}
           </div>
 
           <!-- Journal/Book title and date -->
