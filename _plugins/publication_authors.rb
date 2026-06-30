@@ -56,7 +56,7 @@ module Jekyll
     def field_from_bibtex(bibtex, field)
       return if blank?(bibtex)
 
-      match = bibtex.match(/\b#{Regexp.escape(field)}\s*=/i)
+      match = bibtex.match(/\b#{Regexp.publication_escape(field)}\s*=/i)
       return unless match
 
       index = match.end
@@ -181,12 +181,12 @@ module Jekyll
     end
 
     def format_publication_author(author, site)
-      display = escape(author[:display])
+      display = publication_escape(author[:display])
 
       if self_author?(author, site)
         "<em>#{display}</em>"
       elsif (url = coauthor_url(author, site))
-        %(<a href="#{escape(url)}">#{display}</a>)
+        %(<a href="#{publication_escape(url)}">#{display}</a>)
       else
         display
       end
