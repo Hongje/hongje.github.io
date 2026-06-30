@@ -5,8 +5,8 @@ module Jekyll
     CONTRIBUTION_MARKERS = /[*\u2020\u2021\u00A7]+/.freeze
 
     def publication_authors(entry)
-      authors = parse_publication_authors(author_source(entry))
       site = @context.registers[:site]
+      authors = parsed_publication_authors(entry, site)
 
       authors.each_with_index.map do |author, index|
         html = format_publication_author(author, site)
@@ -23,18 +23,84 @@ module Jekyll
 
     private
 
-    def author_source(entry)
+    def parsed_publication_authors(entry, site)
+      author_sources(entry, site).each do |source|
+        authors = parse_publication_authors(source)
+        return authors unless authors.empty?
+      end
+
+      []
+    end
+
+    def author_sources(entry, site)
       bibtex = value_from(entry, :bibtex)
-      author = field_from_bibtex(bibtex, 'author')
-      return author unless blank?(author)
+      [
+        field_from_bibtex(bibtex, 'author'),
+        value_from(entry, :author),
+        indexed_value_from(entry, 'author'),
+        indexed_value_from(entry, :author),
+        author_from_bibliography_file(entry, site)
+      ].reject { |author| blank?(author) }.map(&:to_s)
+    end
 
-      author = value_from(entry, :author)
-      return author.to_s unless blank?(author)
+    def author_from_bibliography_file(entry, site)
+      key = entry_key(entry)
+      return if blank?(key) || site.nil?
 
-      author = indexed_value_from(entry, 'author')
-      return author.to_s unless blank?(author)
+      bibliography_paths(site).each do |path|
+        next unless File.file?(path)
 
-      indexed_value_from(entry, :author).to_s
+        raw_entry = bibtex_entry_from_file(File.read(path, mode: 'r:BOM|UTF-8'), key)
+        author = field_from_bibtex(raw_entry, 'author')
+        return author unless blank?(author)
+      end
+
+      nil
+    rescue StandardError
+      nil
+    end
+
+    def entry_key(entry)
+      [
+        value_from(entry, :key),
+        indexed_value_from(entry, 'key'),
+        indexed_value_from(entry, :key),
+        value_from(entry, :id),
+        indexed_value_from(entry, 'id'),
+        indexed_value_from(entry, :id)
+      ].find { |key| !blank?(key) }.to_s
+    end
+
+    def bibliography_paths(site)
+      scholar = site.config['scholar'] || {}
+      source_dir = scholar['source'].to_s
+      source_dir = '_bibliography' if blank?(source_dir)
+      source_dir = source_dir.sub(%r{\A/+}, '').sub(%r{/+\z}, '')
+
+      bibliographies = Array(scholar['bibliography']).reject { |path| blank?(path) }
+      bibliographies = ['papers.bib'] if bibliographies.empty?
+
+      site_source = site.respond_to?(:source) ? site.source : Dir.pwd
+      bibliographies.map { |bibliography| File.join(site_source, source_dir, bibliography.to_s) }
+    end
+
+    def bibtex_entry_from_file(text, key)
+      match = text.match(/@\w+\s*\{\s*#{Regexp.escape(key)}\s*,/i)
+      return unless match
+
+      start_index = match.begin(0)
+      open_index = text.index('{', start_index)
+      return unless open_index
+
+      depth = 0
+      text[open_index..].each_char.with_index(open_index) do |char, index|
+        depth += 1 if char == '{'
+        depth -= 1 if char == '}'
+
+        return text[start_index..index] if depth.zero?
+      end
+
+      text[start_index..]
     end
 
     def value_from(entry, key)
