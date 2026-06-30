@@ -218,7 +218,6 @@ module Jekyll
       last.to_s.gsub(CONTRIBUTION_MARKERS, '').strip
     end
 
-    # def escape(value)
     def publication_escape(value)
       CGI.escapeHTML(value.to_s)
     end
