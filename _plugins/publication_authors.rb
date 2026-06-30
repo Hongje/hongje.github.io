@@ -4,9 +4,9 @@ module Jekyll
   module PublicationAuthors
     CONTRIBUTION_MARKERS = /[*\u2020\u2021\u00A7]+/.freeze
 
-    def publication_authors(entry)
+    def publication_authors(entry, key = nil, title = nil)
       site = @context.registers[:site]
-      authors = parsed_publication_authors(entry, site)
+      authors = parsed_publication_authors(entry, site, key, title)
 
       authors.each_with_index.map do |author, index|
         html = format_publication_author(author, site)
@@ -23,8 +23,8 @@ module Jekyll
 
     private
 
-    def parsed_publication_authors(entry, site)
-      author_sources(entry, site).each do |source|
+    def parsed_publication_authors(entry, site, key = nil, title = nil)
+      author_sources(entry, site, key, title).each do |source|
         authors = parse_publication_authors(source)
         return authors unless authors.empty?
       end
@@ -32,25 +32,28 @@ module Jekyll
       []
     end
 
-    def author_sources(entry, site)
+    def author_sources(entry, site, key = nil, title = nil)
       bibtex = value_from(entry, :bibtex)
       [
+        author_from_bibliography_file(entry, site, key, title),
         field_from_bibtex(bibtex, 'author'),
         value_from(entry, :author),
         indexed_value_from(entry, 'author'),
-        indexed_value_from(entry, :author),
-        author_from_bibliography_file(entry, site)
+        indexed_value_from(entry, :author)
       ].reject { |author| blank?(author) }.map(&:to_s)
     end
 
-    def author_from_bibliography_file(entry, site)
-      key = entry_key(entry)
-      return if blank?(key) || site.nil?
+    def author_from_bibliography_file(entry, site, explicit_key = nil, explicit_title = nil)
+      key = entry_key(entry, explicit_key)
+      title = entry_title(entry, explicit_title)
+      return if (blank?(key) && blank?(title)) || site.nil?
 
       bibliography_paths(site).each do |path|
         next unless File.file?(path)
 
-        raw_entry = bibtex_entry_from_file(File.read(path, mode: 'r:BOM|UTF-8'), key)
+        text = read_bibliography_file(path)
+        raw_entry = blank?(key) ? nil : bibtex_entry_from_file(text, key)
+        raw_entry ||= bibtex_entry_with_field_from_file(text, 'title', title) unless blank?(title)
         author = field_from_bibtex(raw_entry, 'author')
         return author unless blank?(author)
       end
@@ -60,8 +63,9 @@ module Jekyll
       nil
     end
 
-    def entry_key(entry)
+    def entry_key(entry, explicit_key = nil)
       [
+        explicit_key,
         value_from(entry, :key),
         indexed_value_from(entry, 'key'),
         indexed_value_from(entry, :key),
@@ -69,6 +73,15 @@ module Jekyll
         indexed_value_from(entry, 'id'),
         indexed_value_from(entry, :id)
       ].find { |key| !blank?(key) }.to_s
+    end
+
+    def entry_title(entry, explicit_title = nil)
+      [
+        explicit_title,
+        value_from(entry, :title),
+        indexed_value_from(entry, 'title'),
+        indexed_value_from(entry, :title)
+      ].find { |title| !blank?(title) }.to_s
     end
 
     def bibliography_paths(site)
@@ -85,10 +98,38 @@ module Jekyll
     end
 
     def bibtex_entry_from_file(text, key)
+      text = text.to_s
       match = text.match(/@\w+\s*\{\s*#{Regexp.escape(key)}\s*,/i)
       return unless match
 
       start_index = match.begin(0)
+      bibtex_entry_at(text, start_index)
+    end
+
+    def bibtex_entry_with_field_from_file(text, field, value)
+      normalized_value = normalized_lookup_value(value)
+      return if normalized_value.empty?
+
+      bibtex_entries_from_file(text).find do |entry|
+        normalized_lookup_value(field_from_bibtex(entry, field)) == normalized_value
+      end
+    end
+
+    def bibtex_entries_from_file(text)
+      text = text.to_s
+      entries = []
+      offset = 0
+
+      while (match = text.match(/@\w+\s*\{/, offset))
+        entry = bibtex_entry_at(text, match.begin(0))
+        entries << entry unless blank?(entry)
+        offset = match.end(0)
+      end
+
+      entries
+    end
+
+    def bibtex_entry_at(text, start_index)
       open_index = text.index('{', start_index)
       return unless open_index
 
@@ -101,6 +142,19 @@ module Jekyll
       end
 
       text[start_index..]
+    end
+
+    def read_bibliography_file(path)
+      File.open(path, 'r:bom|utf-8') { |file| file.read }
+    end
+
+    def normalized_lookup_value(value)
+      CGI.unescapeHTML(value.to_s)
+         .gsub(/<[^>]*>/, '')
+         .gsub(/[{}"]/, '')
+         .gsub(/\s+/, ' ')
+         .strip
+         .downcase
     end
 
     def value_from(entry, key)
@@ -122,6 +176,7 @@ module Jekyll
     def field_from_bibtex(bibtex, field)
       return if blank?(bibtex)
 
+      bibtex = bibtex.to_s
       match = bibtex.match(/\b#{Regexp.escape(field)}\s*=/i)
       return unless match
 

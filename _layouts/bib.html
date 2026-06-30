@@ -42,7 +42,7 @@
           <div class="title">{{entrytitle}}</div>
           <!-- Author -->
           <div class="author">
-            {{ entry | publication_authors }}
+            {{ entry | publication_authors: entry.key, entry.title }}
           </div>
 
           <!-- Journal/Book title and date -->
