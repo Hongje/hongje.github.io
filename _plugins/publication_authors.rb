@@ -195,15 +195,19 @@ module Jekyll
     def self_author?(author, site)
       scholar = site.config['scholar'] || {}
       scholar_last = scholar['last_name'].to_s
-      scholar_first = scholar['first_name'].to_s
+      scholar_first = normalized_name(scholar['first_name'])
+      author_first = normalized_name(author[:first])
 
       normalized_last(author[:last]) == normalized_last(scholar_last) &&
-        scholar_first.include?(author[:first].to_s)
+        (author_first.empty? || scholar_first.include?(author_first))
     end
 
     def coauthor_url(author, site)
       coauthors = site.data['coauthors'] || {}
-      matches = coauthors[author[:first].to_s]
+      clean_first = normalized_name(author[:first])
+      _, matches = coauthors.find do |first, _coauthor_matches|
+        normalized_name(first) == clean_first
+      end
       return unless matches
 
       clean_last = normalized_last(author[:last])
@@ -215,7 +219,19 @@ module Jekyll
     end
 
     def normalized_last(last)
-      last.to_s.gsub(CONTRIBUTION_MARKERS, '').strip
+      normalized_name(last)
+    end
+
+    def normalized_name(name)
+      CGI.unescapeHTML(name.to_s)
+         .gsub(/\\(?:textsuperscript|ensuremath)\s*\{?\s*\\?(?:dagger|ddagger|ast|asterisk|S|section)\s*\}?/i, '')
+         .gsub(/\\(?:dagger|ddagger|ast|asterisk|S|section)\b/i, '')
+         .gsub(/<[^>]*>/, '')
+         .gsub(/[{}]/, '')
+         .gsub(CONTRIBUTION_MARKERS, '')
+         .gsub(/\s+/, ' ')
+         .strip
+         .downcase
     end
 
     def publication_escape(value)
