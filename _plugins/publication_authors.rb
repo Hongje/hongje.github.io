@@ -56,7 +56,7 @@ module Jekyll
     def field_from_bibtex(bibtex, field)
       return if blank?(bibtex)
 
-      match = bibtex.match(/\b#{Regexp.publication_escape(field)}\s*=/i)
+      match = bibtex.match(/\b#{Regexp.escape(field)}\s*=/i)
       return unless match
 
       index = match.end
